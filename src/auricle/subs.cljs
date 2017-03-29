@@ -2,6 +2,11 @@
   (:require [re-frame.core :refer [reg-sub]]))
 
 (reg-sub
-  :get-greeting
+  :speaker
   (fn [db _]
-    (:greeting db)))
+    (:speaker db)))
+
+(reg-sub
+ :db
+ (fn [db _]
+   db))

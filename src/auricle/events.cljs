@@ -29,7 +29,20 @@
    app-db))
 
 (reg-event-db
- :set-greeting
+ :add-rating
  validate-spec
- (fn [db [_ value]]
-   (assoc db :greeting value)))
+ (fn [db [_ speaker rating]]
+   (update-in db [speaker rating] inc)))
+
+
+(reg-event-db
+ :speaker-input-changed
+ validate-spec
+ (fn [db [_ new-name]]
+   (assoc db :speaker-input new-name)))
+
+(reg-event-db
+ :speaker-input-accepted
+ validate-spec
+ (fn [db [_]]
+   (assoc db :speaker (:speaker-input db))))

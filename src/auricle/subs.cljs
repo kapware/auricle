@@ -24,7 +24,9 @@
       (update :sleep count)))
 
 (defn format-speakers [speakers]
-  (map format-speaker speakers))
+  (->> speakers
+       (map format-speaker)
+       (sort-by :created >)))
 
 (reg-sub
  :speakers

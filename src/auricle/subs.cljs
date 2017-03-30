@@ -2,9 +2,9 @@
   (:require [re-frame.core :refer [reg-sub]]))
 
 (reg-sub
-  :speaker
+  :current-speaker
   (fn [db _]
-    (:speaker db)))
+    (:current-speaker db)))
 
 (reg-sub
  :db
@@ -15,3 +15,11 @@
  :loading
  (fn [db _]
    (:loading db)))
+
+(reg-sub
+ :speakers
+ (fn [db _]
+   (-> db
+       :speakers
+       vals
+       (or {}))))

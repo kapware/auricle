@@ -3,6 +3,9 @@
    [re-frame.core :as r :refer [reg-event-db after reg-event-fx]]
    [clojure.spec :as s]
    [auricle.db :as db :refer [app-db]]
+   [cljs-time.core :as tcore]
+   [cljs-time.format :as tformat]
+   [cljs-time.coerce :as tcoerce]
    [auricle.async-storage-fx :as async-storage-fx]))
 
 
@@ -45,11 +48,18 @@
  (fn [db [_ new-name]]
    (assoc db :speaker-input new-name)))
 
+(defn now []
+  (tcoerce/to-long (tcore/now)))
+
 (reg-event-db
  :speaker-input-accepted
  validate-spec
  (fn [db [_]]
-   (assoc db :speaker (:speaker-input db))))
+   (let [speaker (:speaker-input db)]
+     (-> db
+         (assoc :current-speaker speaker)
+         (assoc-in [:speakers speaker] {:name speaker
+                                        :created (now)})))))
 
 (reg-event-fx
  :load-data

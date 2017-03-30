@@ -1,6 +1,8 @@
 (ns auricle.ios.core
   (:require [reagent.core :as r :refer [atom]]
             [re-frame.core :refer [subscribe dispatch dispatch-sync]]
+            [cljs-time.format :as tformat]
+            [cljs-time.coerce :as tcoerce]
             [auricle.events]
             [auricle.subs]))
 
@@ -12,6 +14,10 @@
 (def view (r/adapt-react-class (.-View ReactNative)))
 (def image (r/adapt-react-class (.-Image ReactNative)))
 (def touchable-highlight (r/adapt-react-class (.-TouchableHighlight ReactNative)))
+(def list-view (r/adapt-react-class (.-ListView ReactNative)))
+(def list-view-ds (.-DataSource (.-ListView ReactNative)))
+
+(defn create-ds [change-fn] (list-view-ds. #js{:rowHasChanged change-fn}))
 
 (def love-img (js/require "./images/love.png"))
 (def smile-img (js/require "./images/smile.png"))
@@ -43,21 +49,41 @@
         [emoticon speaker :neutral]
         [emoticon speaker :sleep]]])
 
+(def iso-date-formatter (tformat/formatter "yyyy-MM-dd HH:mm:ss"))
+
+(defn speaker-item [props]
+  (fn [props]
+    (let [row (js->clj props :keywordize-keys true)
+          {:keys [name created love smile neutral sleep]} row
+          date (tformat/unparse iso-date-formatter (tcoerce/from-long created))]
+      [text (str name " " date "\n"
+                 "[ love: " (or love 0)
+                 " smile: " (or smile 0)
+                 " neutral: " (or neutral 0)
+                 " sleep: " (or sleep 0) "]")])))
+
+(defn speaker-list [speakers]
+  [list-view {:dataSource (.cloneWithRows (create-ds (fn [a b] (= a b))) (clj->js speakers))
+              :render-row #(r/as-element [speaker-item %])
+              :enableEmptySections true}])
+
 (defn new-speaker []
-  (let [db (subscribe [:db])]
+  (let [speakers (subscribe [:speakers])]
     (fn []
-  [view {:style {:flex 0 :flex-direction "column" :margin 40 :align-items "center"}}
-   [text "Enter speaker:"]
-   [text-input {:onChangeText #(dispatch [:speaker-input-changed %]):auto-focus true :style {:width 100 :height 100 }}]
-   [touchable-highlight {:on-press #(dispatch [:speaker-input-accepted])}
-    [text "OK"]]
-   [text "db:" @db]])))
+      [view {:style {:flex 1 :flex-direction "column" :justify-content "space-between" :align-items "stretch" :margin-left 20 :margin-right 20}}
+   [text-input {:onChangeText #(dispatch [:speaker-input-changed %])
+                :onSubmitEditing #(dispatch [:speaker-input-accepted])
+                :placeholder "New speaker name"
+                :autoFocus true
+                :autoCorrect false
+                :style {:flex 1}}]
+   [speaker-list @speakers]])))
 
 (defn pages []
-  (let [speaker (subscribe [:speaker])]
-    (if-not @speaker
+  (let [current-speaker (subscribe [:current-speaker])]
+    (if-not @current-speaker
       [new-speaker]
-      [speaker-rating @speaker])))
+      [speaker-rating @current-speaker])))
 
 (defn app-root []
   (let [loading (subscribe [:loading])]

@@ -26,6 +26,8 @@
     []))
 
 ;; -- Handlers --------------------------------------------------------------
+(defn now []
+  (tcoerce/to-long (tcore/now)))
 
 (reg-event-fx
  :initialize-db
@@ -38,7 +40,7 @@
  :add-rating
  validate-spec
  (fn [{:keys [db]} [_ speaker rating]]
-   (let [new-db (update-in db [:speakers speaker rating] inc)]
+   (let [new-db (update-in db [:speakers speaker rating] conj (now))]
      {:db new-db
       :dispatch [:save-data :speakers (:speakers new-db)]})))
 
@@ -47,9 +49,6 @@
  validate-spec
  (fn [db [_ new-name]]
    (assoc db :speaker-input new-name)))
-
-(defn now []
-  (tcoerce/to-long (tcore/now)))
 
 (reg-event-db
  :speaker-input-accepted

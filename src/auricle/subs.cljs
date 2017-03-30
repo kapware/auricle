@@ -10,3 +10,8 @@
  :db
  (fn [db _]
    db))
+
+(reg-sub
+ :loading
+ (fn [db _]
+   (:loading db)))

@@ -6,4 +6,4 @@
   (s/keys :req-un []))
 
 ;; initial state of app-db
-(def app-db {})
+(def app-db {:loading true})

@@ -44,17 +44,26 @@
         [emoticon speaker :sleep]]])
 
 (defn new-speaker []
+  (let [db (subscribe [:db])]
+    (fn []
   [view {:style {:flex 0 :flex-direction "column" :margin 40 :align-items "center"}}
    [text "Enter speaker:"]
    [text-input {:onChangeText #(dispatch [:speaker-input-changed %]):auto-focus true :style {:width 100 :height 100 }}]
    [touchable-highlight {:on-press #(dispatch [:speaker-input-accepted])}
-    [text "OK"]]])
+    [text "OK"]]
+   [text "db:" @db]])))
 
-(defn app-root []
+(defn pages []
   (let [speaker (subscribe [:speaker])]
     (if-not @speaker
       [new-speaker]
       [speaker-rating @speaker])))
+
+(defn app-root []
+  (let [loading (subscribe [:loading])]
+    (if @loading
+      [text "Loading..."]
+      [pages])))
 
 (defn init []
       (dispatch-sync [:initialize-db])

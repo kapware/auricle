@@ -36,3 +36,8 @@
        vals
        (or {})
        (format-speakers))))
+
+(reg-sub
+ :api-key
+ (fn [db _]
+   (:api-key db)))

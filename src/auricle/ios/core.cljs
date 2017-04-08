@@ -37,18 +37,23 @@
   (dispatch [:add-rating speaker rating]))
 
 (defn emoticon [speaker type]
-  [touchable-highlight {:on-press #(rating-clicked speaker type)}
-   [image {:source (type icon-for-type) :style  {:width 80 :height 80 :margin-bottom 30}}]])
+  [touchable-highlight {:on-press #(rating-clicked speaker type) :underlayColor "#fff" }
+   [image {:source (type icon-for-type) :style {:width 80 :height 80 :margin-bottom 30}}]])
 
 (defn speaker-rating [speaker next-time]
-      [view {:style {:flex-direction "column" :margin 40 :align-items "stretch"}}
-       [text {:style {:font-size 30 :font-weight "100" :margin-bottom 20 :text-align "center"}} speaker]
-       [view {:style {:flex-direction "row" :justify-content "space-around"}}
-        [emoticon speaker :love]
-        [emoticon speaker :smile]
-        [emoticon speaker :neutral]
-        [emoticon speaker :sleep]]
-       [text "Time " next-time]])
+  [view {:style {:flex 1 :flex-direction "column" :align-items "stretch"}}
+   [view {:style {:flex 1 :flex-direction "column" :align-items "stretch" :justify-content "center"}}
+    [text {:style {:font-size 30 :font-weight "100" :margin-top -20 :margin-bottom 20 :text-align "center"}} speaker]
+    [view {:style {:flex-direction "row" :justify-content "space-around"}}
+     [emoticon speaker :love]
+     [emoticon speaker :smile]
+     [emoticon speaker :neutral]
+     [emoticon speaker :sleep]]]
+
+   (if next-time
+   [view {:style {:flex 1 :justify-content "center" :position "absolute" :backgroundColor "#000" :left 0 :right 0 :top 0 :bottom 0 :opacity 0.4 :padding 30}}
+    [text {:style {:font-size 150 :font-weight "100" :color "#fff" :text-align "center"}} next-time]
+    [text {:style {:font-size 30 :font-weight "100" :color "#fff" :text-align "center"}} "Dziękujemy za oddanie głosu!\nPrzekaż urządzenie następnej osobie."]])])
 
 (def iso-date-formatter (tformat/formatter "yyyy-MM-dd HH:mm:ss"))
 

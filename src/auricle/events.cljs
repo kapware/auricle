@@ -55,7 +55,7 @@
  (fn [{:keys [db]} [_ speaker rating]]
    (let [new-db (-> db
                     (update-in [:speakers speaker rating] conj (now))
-                    (assoc :next-time 5))]
+                    (assoc :next-time 3))]
      {:db new-db
       :async-storage-fx/set-item (format-item :speakers (:speakers new-db))
       :dispatch [:update-next-time]})))
@@ -64,7 +64,7 @@
  :update-next-time
  validate-spec
  (fn [{:keys [db]} [_]]
-   (if (> (:next-time db) 0)
+   (if (> (:next-time db) 1)
     {:db (update db :next-time dec)
      :tick/next-tick [:update-next-time]}
     {:db (dissoc db :next-time)})))

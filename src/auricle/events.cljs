@@ -1,6 +1,6 @@
 (ns auricle.events
   (:require
-   [re-frame.core :as r :refer [reg-event-db after reg-event-fx]]
+   [re-frame.core :as r :refer [reg-event-db after reg-event-fx dispatch]]
    [clojure.spec :as s]
    [auricle.db :as db :refer [app-db]]
    [cljs-time.core :as tcore]
@@ -31,6 +31,12 @@
 (defn now []
   (tcoerce/to-long (tcore/now)))
 
+(defn format-item [key value]
+  {:key key
+   :value value
+   :on-success [:save-data-success]
+   :on-failure [:save-data-failure]})
+
 (reg-event-fx
  :initialize-db
  validate-spec
@@ -38,13 +44,30 @@
    {:db app-db
     :dispatch [:load-data :speakers]}))
 
+(r/reg-fx
+ :tick/next-tick
+ (fn [tick-event]
+   (js/setTimeout #(dispatch tick-event) 1000)))
+
 (reg-event-fx
  :add-rating
  validate-spec
  (fn [{:keys [db]} [_ speaker rating]]
-   (let [new-db (update-in db [:speakers speaker rating] conj (now))]
+   (let [new-db (-> db
+                    (update-in [:speakers speaker rating] conj (now))
+                    (assoc :next-time 5))]
      {:db new-db
-      :dispatch [:save-data :speakers (:speakers new-db)]})))
+      :async-storage-fx/set-item (format-item :speakers (:speakers new-db))
+      :dispatch [:update-next-time]})))
+
+(reg-event-fx
+ :update-next-time
+ validate-spec
+ (fn [{:keys [db]} [_]]
+   (if (> (:next-time db) 0)
+    {:db (update db :next-time dec)
+     :tick/next-tick [:update-next-time]}
+    {:db (dissoc db :next-time)})))
 
 (reg-event-db
  :speaker-input-changed
@@ -85,17 +108,6 @@
  (fn [db [_ reason]]
    (assoc db :fail reason)))
 
-(reg-event-fx
- :save-data
- validate-spec
- (fn
-   [{:keys [db]} [_ key value]]
-   {:db db
-    :async-storage-fx/set-item {:key key
-                                :value value
-                                :on-success [:save-data-success]
-                                :on-failure [:save-data-failure]}}))
-
 (reg-event-db
  :save-data-success
  validate-spec
@@ -114,7 +126,7 @@
  (fn [{:keys [db]} [_]]
    (let [api-key (:api-key-input db)]
      {:db (assoc db :api-key api-key)
-      :dispatch [:save-data :api-key api-key]})))
+      :async-storage-fx/set-item (format-item :api-key api-key)})))
 
 (reg-event-db
  :api-key-input-changed

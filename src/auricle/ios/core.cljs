@@ -40,14 +40,15 @@
   [touchable-highlight {:on-press #(rating-clicked speaker type)}
    [image {:source (type icon-for-type) :style  {:width 80 :height 80 :margin-bottom 30}}]])
 
-(defn speaker-rating [speaker]
+(defn speaker-rating [speaker next-time]
       [view {:style {:flex-direction "column" :margin 40 :align-items "stretch"}}
        [text {:style {:font-size 30 :font-weight "100" :margin-bottom 20 :text-align "center"}} speaker]
        [view {:style {:flex-direction "row" :justify-content "space-around"}}
         [emoticon speaker :love]
         [emoticon speaker :smile]
         [emoticon speaker :neutral]
-        [emoticon speaker :sleep]]])
+        [emoticon speaker :sleep]]
+       [text "Time " next-time]])
 
 (def iso-date-formatter (tformat/formatter "yyyy-MM-dd HH:mm:ss"))
 
@@ -95,10 +96,11 @@
          [export-button])])))
 
 (defn pages []
-  (let [current-speaker (subscribe [:current-speaker])]
+  (let [current-speaker (subscribe [:current-speaker])
+        next-time (subscribe [:next-time])]
     (if-not @current-speaker
       [new-speaker]
-      [speaker-rating @current-speaker])))
+      [speaker-rating @current-speaker @next-time])))
 
 (defn app-root []
   (let [loading (subscribe [:loading])]

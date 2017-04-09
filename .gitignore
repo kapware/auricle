@@ -65,3 +65,5 @@ figwheel_server.log
 .nrepl-port
 figwheel_server.log
 .lein-repl-history
+
+android/auricle.keystore

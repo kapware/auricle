@@ -13,13 +13,19 @@ The application is intended to be used in a kiosk mode of the device.
 Typical flow:
 1. Just after running the app, the initial screen of the device is shown.
 2. On the administration screen, start by adding new speaker: type in the name and accept it with enter.
+![01-enter-speaker](https://cloud.githubusercontent.com/assets/6385017/25023669/07501404-209b-11e7-9e92-7283300cac2e.png)
 3. That will start rating mode (emoticons will be shown).
+![02-rating](https://cloud.githubusercontent.com/assets/6385017/25023666/0743ebac-209b-11e7-87fd-0b402929a645.png)
 4. Enable kiosk mode here to protect the device, locking it on a single app (ios: triple button, android > 5.0 : pin mode)
 5. Pass on the device to the audience to gather feedback.
 6. After each rating is given there is a delay that will prevent repetetive ratings and informs users to pass on the device to the next person.
+![03-delay](https://cloud.githubusercontent.com/assets/6385017/25023665/07419cf8-209b-11e7-8d91-21b4511bc8b8.png)
 7. When the device is back, disable kiosk mode and kill the app (swipe it to kill in the task manager).
+![04-kill-the-app](https://cloud.githubusercontent.com/assets/6385017/25023664/073eb696-209b-11e7-83a3-90acf685bdf8.png)
 8. Rerun the app to see the cumulative that for speaker.
+![05-cumulative-stats](https://cloud.githubusercontent.com/assets/6385017/25023667/0744290a-209b-11e7-8310-11112b3d1536.png)
 9. You may want to input https://paste.ee api key to be able to export detailed data for futher analysis (the app gathers each rating individually with a timestamp).
+![06-export-to-pastee](https://cloud.githubusercontent.com/assets/6385017/25023668/0745a2ee-209b-11e7-88d5-1eb281dae36d.png)
 
 ## Setup
 

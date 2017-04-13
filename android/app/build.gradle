@@ -65,6 +65,11 @@ import com.android.build.OutputFile
  * ]
  */
 
+project.ext.react = [
+        // override which node gets called and with what additional arguments
+        nodeExecutableAndArgs: ["node", "--max-old-space-size=4096"]
+]
+
 apply from: "../../node_modules/react-native/react.gradle"
 
 /**

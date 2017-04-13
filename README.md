@@ -1,14 +1,54 @@
 # auricle
 
-A Clojure library designed to ... well, that part is up to you.
+> You didn't come here to make the choice. </br>
+> You've already made it. You're here to try to understand why you made it.
+
+_The Oracle_
+
+**Auricle** is a mobile app intended for gathering quantitive feedback from large audiences that attend presentations (like Toruń JUG meetups: http://torun.jug.pl).
 
 ## Usage
+The application is intended to be used in a kiosk mode of the device. 
 
-FIXME
+Typical flow:
+1. Just after running the app, the initial screen of the device is shown.
+2. On the administration screen, start by adding new speaker: type in the name and accept it with enter.
+3. That will start rating mode (emoticons will be shown).
+4. Enable kiosk mode here to protect the device, locking it on a single app (ios: triple button, android > 5.0 : pin mode)
+5. Pass on the device to the audience to gather feedback.
+6. After each rating is given there is a delay that will prevent repetetive ratings and informs users to pass on the device to the next person.
+7. When the device is back, disable kiosk mode and kill the app (swipe it to kill in the task manager).
+8. Rerun the app to see the cumulative that for speaker.
+9. You may want to input https://paste.ee api key to be able to export detailed data for futher analysis (the app gathers each rating individually with a timestamp).
+
+## Setup
+
+### Prerequisites
+1. For prerequisites refer to https://github.com/drapanjanas/re-natal#dependencies.
+2. Clone the repository (i.e.: `git clone`). 
+
+### Android setup
+The app should work, albeit untested, on Jelly Bean 4.1 (requires api 16). However, Android 5.0 is recommended (as it introduces pinning feature aka. kiosk mode: https://developer.android.com/about/versions/android-5.0.html#ScreenPinning). Connect your device using usb cable and enable USB debug mode (Developer settings). Refer to official docs if in doubt: https://developer.android.com/studio/install.html. Then you may try to build and install the app on device.
+```
+lein prod-build
+cd android
+./gradlew assembleRelease
+keytool -genkey -v -keystore auricle.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore auricle.keystore app/build/outputs/apk/app-release-unsigned.apk alias_name
+adb install app/build/outputs/apk/app-release-unsigned.apk 
+```
+
+### iOS setup
+To install app on ios device, you need a recent *Mac*.
+```
+lein prod-build
+re-natal xcode
+```
+In Xcode, press `cmd` + `>` and change `Build configuration` to `Release`. Connect your device and pick it from device list. Run your product (`cmd` + `R`). That should build the app and place it on the device.
 
 ## License
 
-Copyright © 2017 FIXME
+Copyright © 2017 kapware
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.

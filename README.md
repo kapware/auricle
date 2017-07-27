@@ -69,6 +69,25 @@ Here you might want to connect from (spac)emacs to repl (or execute directly fro
 ```
 (start-figwheel "ios")
 ```
+When `Prompt will show when Figwheel connects to your application` is shown, reload the app in emulator using `Reload M-R`.
+
+### Android development setup
+Prerequisite is to have avd created (either with `avdmanager` or AndroidStudio) and emulator running (either with commandline `tools/bin/emulator` or AndroidStudio). I prefer to open auricle project in Android Studio (`auricle/android`) and run project from it. Then issue:
+```
+re-natal use-figwheel
+re-natal use-android-device avd
+re-natal use-figwheel
+react-native run-android
+```
+When simulator runs it should show red screen with "Unexpected identifier 'GET'" or white screen with "Waiting for Figwheel to load files.". Then run lein:
+```
+lein repl
+```
+Here you might want to connect from (spac)emacs to repl (or execute directly from lein repl), and to start figwheel and get clojurescript repl run:
+```
+(start-figwheel "android")
+```
+When `Prompt will show when Figwheel connects to your application` is shown, reload the app in emulator using `Reload R,R`.
 
 ## License
 

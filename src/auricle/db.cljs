@@ -1,5 +1,5 @@
 (ns auricle.db
-  (:require [clojure.spec :as s]))
+  (:require [cljs.spec.alpha :as s]))
 
 ;; spec of app-db
 (s/def ::app-db

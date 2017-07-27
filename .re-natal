@@ -1,8 +1,6 @@
 {
   "name": "auricle",
   "interface": "reagent6",
-  "androidHost": "localhost",
-  "iosHost": "localhost",
   "envRoots": {
     "dev": "env/dev",
     "prod": "env/prod"
@@ -10,5 +8,15 @@
   "modules": [],
   "imageDirs": [
     "images"
-  ]
+  ],
+  "platforms": {
+    "ios": {
+      "host": "localhost",
+      "modules": []
+    },
+    "android": {
+      "host": "10.0.2.2",
+      "modules": []
+    }
+  }
 }

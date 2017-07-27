@@ -1,7 +1,7 @@
 (ns auricle.events
   (:require
    [re-frame.core :as r :refer [reg-event-db after reg-event-fx dispatch]]
-   [clojure.spec :as s]
+   [cljs.spec.alpha :as s]
    [auricle.db :as db :refer [app-db]]
    [cljs-time.core :as tcore]
    [cljs-time.format :as tformat]

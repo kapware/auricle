@@ -32,6 +32,8 @@ Typical flow:
 ### Prerequisites
 1. For prerequisites refer to https://github.com/drapanjanas/re-natal#dependencies.
 2. Clone the repository (i.e.: `git clone`). 
+3. re-natal 0.5.0 (i.e.: `npm install -g re-natal@0.5.0`)
+4. react-native-cli 2.0.1 (i.e.: `npm install -g react-native-cli@2.0.1`)
 
 ### Android setup
 The app should work, albeit untested, on Jelly Bean 4.1 (requires api 16). However, Android 5.0 is recommended (as it introduces pinning feature aka. kiosk mode: https://developer.android.com/about/versions/android-5.0.html#ScreenPinning). Connect your device using usb cable and enable USB debug mode (Developer settings). Refer to official docs if in doubt: https://developer.android.com/studio/install.html. Then you may try to build and install the app on device.

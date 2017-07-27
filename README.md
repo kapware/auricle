@@ -54,6 +54,22 @@ re-natal xcode
 ```
 In Xcode, press `cmd` + `>` and change `Build configuration` to `Release`. Connect your device and pick it from device list. Run your product (`cmd` + `R`). That should build the app and place it on the device.
 
+## Development setup
+
+### iOS development setup
+```
+re-natal use-figwheel
+react-native run-ios
+```
+When simulator runs it should show red screen with "Unexpected identifier 'GET'" or white screen with "Waiting for Figwheel to load files.". Then run lein:
+```
+lein repl
+```
+Here you might want to connect from (spac)emacs to repl (or execute directly from lein repl), and to start figwheel and get clojurescript repl run:
+```
+(start-figwheel "ios")
+```
+
 ## License
 
 Copyright © 2017 kapware

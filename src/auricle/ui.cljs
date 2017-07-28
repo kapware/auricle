@@ -76,7 +76,7 @@
 
 (defn share-button []
   [touchable-highlight {:on-press #(dispatch [:share-data])}
-   [text {:style {:padding 10 :background-color "#999999" :margin-bottom 10}} "Share with sharing"]])
+   [text {:style {:padding 10 :background-color "#999999" :margin-bottom 10}} "Share"]])
 
 (defn new-speaker []
   (let [speakers (subscribe [:speakers])
@@ -90,7 +90,7 @@
                     :autoCorrect false
                     :style {:flex 1}}]
        [speaker-list @speakers]
-       (share-button)
+       [share-button]
        (if-not @api-key
          [view {:flex 1 :flex-direction "row"}
          [text-input {:onChangeText #(dispatch [:api-key-input-changed %])

@@ -1,6 +1,5 @@
 (ns auricle.events
   (:require
-   [reagent.core :refer [adapt-react-class]]
    [re-frame.core :as r :refer [reg-event-db after reg-event-fx dispatch]]
    [cljs.spec.alpha :as s]
    [auricle.db :as db :refer [app-db]]
@@ -12,7 +11,7 @@
    [auricle.async-storage-fx :as async-storage-fx]))
 
 (def ReactNative (js/require "react-native"))
-(def share-class (adapt-react-class (.-Share ReactNative)))
+(def share-class (.-Share ReactNative))
 (defn share [content] (.share share-class content {}))
 
 ;; -- Interceptors ------------------------------------------------------------

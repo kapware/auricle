@@ -10,10 +10,6 @@
    [day8.re-frame.http-fx]
    [auricle.async-storage-fx :as async-storage-fx]))
 
-(def ReactNative (js/require "react-native"))
-(def share-class (.-Share ReactNative))
-(defn share [content] (.share share-class content {}))
-
 ;; -- Interceptors ------------------------------------------------------------
 ;;
 ;; See https://github.com/Day8/re-frame/blob/master/docs/Interceptors.md
@@ -137,13 +133,6 @@
  (fn [db [_ new-name]]
    (assoc db :api-key-input new-name)))
 
-(reg-event-fx
- :share-data
- validate-spec
- (fn
-   [{:keys [db]} [_]]
-   {:db (assoc db :sharing-status-whatever (share {:message (str (:speakers db))}))
-    }))
 
 (reg-event-fx
  :export-data

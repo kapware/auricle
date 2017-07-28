@@ -74,8 +74,12 @@
   [touchable-highlight {:on-press #(dispatch [:export-data])}
    [text {:style {:padding 10 :background-color "#FFDD67" :margin-bottom 10} } "Export to Paste.ee"]])
 
-(defn share-button []
-  [touchable-highlight {:on-press #(dispatch [:share-data])}
+(def share-class (.-Share ReactNative))
+(defn share [content] (.share share-class content {}))
+(defn share-speakers [speakers] (share {:message (str speakers)}))
+
+(defn share-button [speakers]
+  [touchable-highlight {:on-press #(share-speakers speakers)}
    [text {:style {:padding 10 :background-color "#999999" :margin-bottom 10}} "Share"]])
 
 (defn new-speaker []
@@ -90,7 +94,7 @@
                     :autoCorrect false
                     :style {:flex 1}}]
        [speaker-list @speakers]
-       [share-button]
+       [share-button @speakers]
        (if-not @api-key
          [view {:flex 1 :flex-direction "row"}
          [text-input {:onChangeText #(dispatch [:api-key-input-changed %])

@@ -74,6 +74,10 @@
   [touchable-highlight {:on-press #(dispatch [:export-data])}
    [text {:style {:padding 10 :background-color "#FFDD67" :margin-bottom 10} } "Export to Paste.ee"]])
 
+(defn share-button []
+  [touchable-highlight {:on-press #(dispatch [:share-data])}
+   [text {:style {:padding 10 :background-color "#999999" :margin-bottom 10}} "Share with sharing"]])
+
 (defn new-speaker []
   (let [speakers (subscribe [:speakers])
         api-key (subscribe [:api-key])]
@@ -86,6 +90,7 @@
                     :autoCorrect false
                     :style {:flex 1}}]
        [speaker-list @speakers]
+       (share-button)
        (if-not @api-key
          [view {:flex 1 :flex-direction "row"}
          [text-input {:onChangeText #(dispatch [:api-key-input-changed %])

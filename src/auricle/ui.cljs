@@ -75,7 +75,7 @@
    [text {:style {:padding 10 :background-color "#FFDD67" :margin-bottom 10} } "Export to Paste.ee"]])
 
 (def share-class (.-Share ReactNative))
-(defn share [content] (.share share-class content {}))
+(defn share [content] (.share share-class (clj->js content) {}))
 (defn share-speakers [speakers] (share {:message (str speakers)}))
 
 (defn share-button [speakers]

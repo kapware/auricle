@@ -7,7 +7,8 @@
   },
   "modules": [
     "react-native-fs",
-    "react-native-file-opener"
+    "react-native-file-opener",
+    "react-native-share"
   ],
   "imageDirs": [
     "images"

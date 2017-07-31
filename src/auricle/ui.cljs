@@ -85,11 +85,18 @@
 (defn share-button [speakers] (a-share-button "Share msg" share-speakers speakers))
 
 (def RNFS (js/require "react-native-fs"))
-(def the-file-path (str (.-DocumentDirectoryPath RNFS) "/thefilepath.txt"))
+(def what-platform (keyword (str (.-OS (.-Platform ReactNative)))))
+(def the-relative-file-path "auricle-saved.txt")
+(def the-file-path (str (case what-platform ;;.-DocumentDirectoryPath
+                           :android (.-ExternalDirectoryPath RNFS)
+                           :ios (.-LibraryDirectoryPath RNFS)) "/" the-relative-file-path))
 (defn rnfs-write-to-file [speakers] (.writeFile RNFS the-file-path (str speakers) "utf8"))
+(def rn-file-opener (js/require "react-native-file-opener"))
+(defn open-opener [] (.open rn-file-opener the-file-path "text/plain"))
 (defn write-to-file [speakers] (-> speakers
                                    rnfs-write-to-file
-                                   (.then #(js/console.log (str "suc " (pr-str %))))
+                                   (.then #(do (js/console.log (str "suc " (pr-str %)))
+                                               (open-opener)))
                                    (.catch #(js/console.log (str "err " (pr-str %))))))
 
 (defn write-to-file-button [speakers] (a-share-button "Write to file" write-to-file speakers))

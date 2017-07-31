@@ -93,13 +93,17 @@
 (defn rnfs-write-to-file [speakers] (.writeFile RNFS the-file-path (str speakers) "utf8"))
 (def rn-file-opener (js/require "react-native-file-opener"))
 (defn open-opener [] (.open rn-file-opener the-file-path "text/plain"))
-(defn write-to-file [speakers] (-> speakers
+(defn write-to-file-fn [what-then-fn]
+  (fn write-to-file [speakers] (-> speakers
                                    rnfs-write-to-file
-                                   (.then #(do (js/console.log (str "suc " (pr-str %)))
-                                               (open-opener)))
-                                   (.catch #(js/console.log (str "err " (pr-str %))))))
-
-(defn write-to-file-button [speakers] (a-share-button "Write to file" write-to-file speakers))
+                                   (.then #(do (js/console.log (str "suc " (pr-str %) "|" the-file-path))
+                                               (what-then-fn)))
+                                   (.catch #(js/console.log (str "err " (pr-str %)))))))
+(def write-to-file-and-open (write-to-file-fn open-opener))
+(defn write-to-file-and-open-button [speakers] (a-share-button "Write to file &open" write-to-file-and-open speakers))
+(defn share-filepath [] (share {:url the-file-path}))
+(def write-to-file-and-share (write-to-file-fn share-filepath))
+(defn write-to-file-and-share-button [speakers] (a-share-button "Write to file &share" write-to-file-and-share speakers))
 
 (defn new-speaker []
   (let [speakers (subscribe [:speakers])
@@ -115,7 +119,8 @@
        [speaker-list @speakers]
        [view {:flex 1 :flex-direction "row" :justify-content "space-between"}
         [share-button @speakers]
-        [write-to-file-button @speakers]]
+        [write-to-file-and-open-button @speakers]
+        [write-to-file-and-share-button @speakers]]
        (if-not @api-key
          [view {:flex 1 :flex-direction "row"}
          [text-input {:onChangeText #(dispatch [:api-key-input-changed %])

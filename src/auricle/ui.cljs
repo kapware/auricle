@@ -78,9 +78,21 @@
 (defn share [content] (.share share-class (clj->js content) {}))
 (defn share-speakers [speakers] (share {:message (str speakers)}))
 
-(defn share-button [speakers]
-  [touchable-highlight {:on-press #(share-speakers speakers)}
-   [text {:style {:padding 10 :background-color "#999999" :margin-bottom 10}} "Share"]])
+(defn a-share-button [text-on on-press-func speakers]
+  [touchable-highlight {:on-press #(on-press-func speakers)}
+   [text {:style {:padding 10 :background-color "#999999" :margin-bottom 10}} text-on]])
+
+(defn share-button [speakers] (a-share-button "Share msg" share-speakers speakers))
+
+(def RNFS (js/require "react-native-fs"))
+(def the-file-path (str (.-DocumentDirectoryPath RNFS) "/thefilepath.txt"))
+(defn rnfs-write-to-file [speakers] (.writeFile RNFS the-file-path (str speakers) "utf8"))
+(defn write-to-file [speakers] (-> speakers
+                                   rnfs-write-to-file
+                                   (.then #(js/console.log (str "suc " (pr-str %))))
+                                   (.catch #(js/console.log (str "err " (pr-str %))))))
+
+(defn write-to-file-button [speakers] (a-share-button "Write to file" write-to-file speakers))
 
 (defn new-speaker []
   (let [speakers (subscribe [:speakers])
@@ -94,7 +106,9 @@
                     :autoCorrect false
                     :style {:flex 1}}]
        [speaker-list @speakers]
-       [share-button @speakers]
+       [view {:flex 1 :flex-direction "row" :justify-content "space-between"}
+        [share-button @speakers]
+        [write-to-file-button @speakers]]
        (if-not @api-key
          [view {:flex 1 :flex-direction "row"}
          [text-input {:onChangeText #(dispatch [:api-key-input-changed %])

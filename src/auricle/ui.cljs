@@ -70,9 +70,6 @@
               :render-row #(r/as-element [speaker-item %])
               :enableEmptySections true}])
 
-(defn a-share-button [text-on on-press-func speakers]
-  [touchable-highlight {:on-press #(on-press-func speakers)}
-   [text {:style {:padding 10 :background-color "#999999" :margin-bottom 10}} text-on]])
 (def RNFS (js/require "react-native-fs"))
 (def what-platform (keyword (str (.-OS (.-Platform ReactNative)))))
 (def the-relative-file-path "auricle-saved.txt")
@@ -94,6 +91,9 @@
                                                        ;;:message "This is the file"
                                                        })))
 (def write-to-file-and-share (write-to-file-fn share-filepath))
+(defn a-share-button [text-on on-press-func speakers]
+  [touchable-highlight {:on-press #(on-press-func speakers)}
+   [text {:style {:padding 10 :background-color "#999999" :margin-bottom 10}} text-on]])
 (defn write-to-file-and-share-button [speakers] (a-share-button "Write to file &share" write-to-file-and-share speakers))
 
 (defn new-speaker []

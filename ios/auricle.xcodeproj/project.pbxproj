@@ -22,7 +22,6 @@
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		B0314355B1B543DE84BD37CA /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 905F022AC5954080A6F57D3A /* libRNFS.a */; };
-		5D27088B9FEC4B67B653FF2E /* libRNFileOpener.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C81A53B17B14784A6FA1693 /* libRNFileOpener.a */; };
 		904A0798CB1B4D9EA0D492AC /* libRNShare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F79A6A13FE9439B9A907FB8 /* libRNShare.a */; };
 /* End PBXBuildFile section */
 
@@ -228,8 +227,6 @@
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		1CD3E61BDF09456FAF06EECE /* RNFS.xcodeproj */ = {isa = PBXFileReference; name = "RNFS.xcodeproj"; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		905F022AC5954080A6F57D3A /* libRNFS.a */ = {isa = PBXFileReference; name = "libRNFS.a"; path = "libRNFS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		F0C062B9A31A46A5964A72D9 /* RNFileOpener.xcodeproj */ = {isa = PBXFileReference; name = "RNFileOpener.xcodeproj"; path = "../node_modules/react-native-file-opener/ios/RNFileOpener.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		8C81A53B17B14784A6FA1693 /* libRNFileOpener.a */ = {isa = PBXFileReference; name = "libRNFileOpener.a"; path = "libRNFileOpener.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		AE36A50852844F9AA3CD5FEA /* RNShare.xcodeproj */ = {isa = PBXFileReference; name = "RNShare.xcodeproj"; path = "../node_modules/react-native-share/ios/RNShare.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		4F79A6A13FE9439B9A907FB8 /* libRNShare.a */ = {isa = PBXFileReference; name = "libRNShare.a"; path = "libRNShare.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
@@ -251,7 +248,6 @@
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				B0314355B1B543DE84BD37CA /* libRNFS.a in Frameworks */,
-				5D27088B9FEC4B67B653FF2E /* libRNFileOpener.a in Frameworks */,
 				904A0798CB1B4D9EA0D492AC /* libRNShare.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -398,7 +394,6 @@
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				1CD3E61BDF09456FAF06EECE /* RNFS.xcodeproj */,
-				F0C062B9A31A46A5964A72D9 /* RNFileOpener.xcodeproj */,
 				AE36A50852844F9AA3CD5FEA /* RNShare.xcodeproj */,
 			);
 			name = Libraries;
@@ -785,12 +780,10 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/auricle\"",
 					"\"$(SRCROOT)/auricle\"",
-					"\"$(SRCROOT)/auricle\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 				);
 			};
@@ -816,12 +809,10 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/auricle\"",
 					"\"$(SRCROOT)/auricle\"",
-					"\"$(SRCROOT)/auricle\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 				);
 			};

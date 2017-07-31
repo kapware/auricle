@@ -6,7 +6,8 @@
     "prod": "env/prod"
   },
   "modules": [
-    "react-native-fs"
+    "react-native-fs",
+    "react-native-file-opener"
   ],
   "imageDirs": [
     "images"

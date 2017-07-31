@@ -131,6 +131,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-share')
     compile project(':react-native-file-opener')
     compile project(':react-native-fs')
     compile fileTree(dir: "libs", include: ["*.jar"])

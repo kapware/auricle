@@ -101,7 +101,13 @@
                                    (.catch #(js/console.log (str "err " (pr-str %)))))))
 (def write-to-file-and-open (write-to-file-fn open-opener))
 (defn write-to-file-and-open-button [speakers] (a-share-button "Write to file &open" write-to-file-and-open speakers))
-(defn share-filepath [] (share {:url the-file-path}))
+(def esteban-share (js/require "react-native-share"))
+(defn share-filepath [] (.open esteban-share (clj->js {:url (str "file://" the-file-path)
+                                                       ;;:type "text/plain"
+                                                       ;;:title "Auricle saved data"
+                                                       ;;:subject "Auricle saved data"
+                                                       ;;:message "This is the file"
+                                                       })))
 (def write-to-file-and-share (write-to-file-fn share-filepath))
 (defn write-to-file-and-share-button [speakers] (a-share-button "Write to file &share" write-to-file-and-share speakers))
 

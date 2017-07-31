@@ -87,16 +87,12 @@
                            :android (.-ExternalDirectoryPath RNFS)
                            :ios (.-LibraryDirectoryPath RNFS)) "/" the-relative-file-path))
 (defn rnfs-write-to-file [speakers] (.writeFile RNFS the-file-path (str speakers) "utf8"))
-(def rn-file-opener (js/require "react-native-file-opener"))
-(defn open-opener [] (.open rn-file-opener the-file-path "text/plain"))
 (defn write-to-file-fn [what-then-fn]
   (fn write-to-file [speakers] (-> speakers
                                    rnfs-write-to-file
                                    (.then #(do (js/console.log (str "suc " (pr-str %) "|" the-file-path))
                                                (what-then-fn)))
                                    (.catch #(js/console.log (str "err " (pr-str %)))))))
-(def write-to-file-and-open (write-to-file-fn open-opener))
-(defn write-to-file-and-open-button [speakers] (a-share-button "Write to file &open" write-to-file-and-open speakers))
 (def esteban-share (js/require "react-native-share"))
 (defn share-filepath [] (.open esteban-share (clj->js {:url (str "file://" the-file-path)
                                                        ;;:type "text/plain"
@@ -120,7 +116,6 @@
        [speaker-list @speakers]
        [view {:flex 1 :flex-direction "row" :justify-content "space-between"}
         [share-button @speakers]
-        [write-to-file-and-open-button @speakers]
         [write-to-file-and-share-button @speakers]]
        ])))
 

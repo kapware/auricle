@@ -70,10 +70,6 @@
               :render-row #(r/as-element [speaker-item %])
               :enableEmptySections true}])
 
-(defn export-button []
-  [touchable-highlight {:on-press #(dispatch [:export-data])}
-   [text {:style {:padding 10 :background-color "#FFDD67" :margin-bottom 10} } "Export to Paste.ee"]])
-
 (def share-class (.-Share ReactNative))
 (defn share [content] (.share share-class (clj->js content) {}))
 (defn share-speakers [speakers] (share {:message (str speakers)}))
@@ -112,8 +108,7 @@
 (defn write-to-file-and-share-button [speakers] (a-share-button "Write to file &share" write-to-file-and-share speakers))
 
 (defn new-speaker []
-  (let [speakers (subscribe [:speakers])
-        api-key (subscribe [:api-key])]
+  (let [speakers (subscribe [:speakers])]
     (fn []
       [view {:style {:flex 1 :flex-direction "column" :justify-content "space-between" :align-items "stretch" :margin-left 20 :margin-right 20}}
        [text-input {:onChangeText #(dispatch [:speaker-input-changed %])
@@ -127,16 +122,7 @@
         [share-button @speakers]
         [write-to-file-and-open-button @speakers]
         [write-to-file-and-share-button @speakers]]
-       (if-not @api-key
-         [view {:flex 1 :flex-direction "row"}
-         [text-input {:onChangeText #(dispatch [:api-key-input-changed %])
-                      :onSubmitEditing #(dispatch [:save-api-key])
-                      :placeholder "Paste.ee api key"
-                      :autoCorrect false
-                      :style {:flex 1}}]
-          [touchable-highlight {:on-press #(dispatch [:load-data :api-key])}
-           [text "Load api-key"]]]
-         [export-button])])))
+       ])))
 
 (defn pages []
   (let [current-speaker (subscribe [:current-speaker])

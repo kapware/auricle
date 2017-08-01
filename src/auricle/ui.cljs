@@ -89,12 +89,10 @@
                                    (.then (what-then-fn))
                                    (.catch #(alert-about-write-failed %)))))
 (def esteban-share (js/require "react-native-share"))
-(defn share-filepath [] (.open esteban-share (clj->js {:url (str "file://" the-file-path)
-                                                       ;;:type "text/plain"
-                                                       ;;:title "Auricle saved data"
-                                                       ;;:subject "Auricle saved data"
-                                                       ;;:message "This is the file"
-                                                       })))
+(defn share-filepath [] (.open esteban-share
+                               (clj->js {:url (str "file://" the-file-path)
+                                         ;;maybe setting :title or :subject (not :message) would prevent crashes
+                                         })))
 (def write-to-file-and-share (write-to-file-fn share-filepath))
 (defn a-share-button [text-on on-press-func speakers]
   [touchable-highlight {:on-press #(on-press-func speakers)}

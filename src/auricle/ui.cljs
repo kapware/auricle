@@ -94,10 +94,10 @@
                                          ;;maybe setting :title or :subject (not :message) would prevent crashes
                                          })))
 (def write-to-file-and-share (write-to-file-fn share-filepath))
-(defn a-share-button [text-on on-press-func speakers]
+(defn share-button [text-on on-press-func speakers]
   [touchable-highlight {:on-press #(on-press-func speakers)}
    [text {:style {:padding 10 :background-color "#999999" :margin-bottom 10}} text-on]])
-(defn write-to-file-and-share-button [speakers] (a-share-button "Export" write-to-file-and-share speakers))
+(defn export-button [speakers] (share-button "Export" write-to-file-and-share speakers))
 
 (defn new-speaker []
   (let [speakers (subscribe [:speakers])]
@@ -110,8 +110,8 @@
                     :autoCorrect false
                     :style {:flex 1}}]
        [speaker-list @speakers]
-       [view {:flex 1 :flex-direction "row" :justify-content "space-between"}
-        [write-to-file-and-share-button @speakers]]
+       [view {:flex 1 :flex-direction "row" :justify-content "center" :align-items "center"}
+        [export-button @speakers]]
        ])))
 
 (defn pages []

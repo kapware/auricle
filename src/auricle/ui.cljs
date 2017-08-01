@@ -77,12 +77,17 @@
                            :android (.-ExternalDirectoryPath RNFS)
                            :ios (.-LibraryDirectoryPath RNFS)) "/" the-relative-file-path))
 (defn rnfs-write-to-file [speakers] (.writeFile RNFS the-file-path (str speakers) "utf8"))
+(defn alert-about-write-failed [e] (.alert (.-Alert ReactNative)
+                                           "Writing to file failed"
+                                           (str "There was an error writing to file: " e
+                                                "  →the path: " the-file-path)
+                                           (clj->js
+                                            [{:text "Too bad" :onPress #(do)}])))
 (defn write-to-file-fn [what-then-fn]
   (fn write-to-file [speakers] (-> speakers
                                    rnfs-write-to-file
-                                   (.then #(do (js/console.log (str "suc " (pr-str %) "|" the-file-path))
-                                               (what-then-fn)))
-                                   (.catch #(js/console.log (str "err " (pr-str %)))))))
+                                   (.then (what-then-fn))
+                                   (.catch #(alert-about-write-failed %)))))
 (def esteban-share (js/require "react-native-share"))
 (defn share-filepath [] (.open esteban-share (clj->js {:url (str "file://" the-file-path)
                                                        ;;:type "text/plain"

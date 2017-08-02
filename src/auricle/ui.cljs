@@ -73,7 +73,7 @@
 (def RNFS (js/require "react-native-fs"))
 (def what-platform (keyword (str (.-OS (.-Platform ReactNative)))))
 (def the-relative-file-path "auricle-saved.txt")
-(def the-file-path (str (case what-platform ;;.-DocumentDirectoryPath
+(def the-file-path (str (case what-platform ;;maybe could have used .-DocumentDirectoryPath here
                            :android (.-ExternalDirectoryPath RNFS)
                            :ios (.-LibraryDirectoryPath RNFS)) "/" the-relative-file-path))
 (defn rnfs-write-to-file [speakers] (.writeFile RNFS the-file-path (str speakers) "utf8"))

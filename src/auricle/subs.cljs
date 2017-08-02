@@ -42,7 +42,3 @@
  (fn [db _]
    (:next-time db)))
 
-(reg-sub
- :api-key
- (fn [db _]
-   (:api-key db)))

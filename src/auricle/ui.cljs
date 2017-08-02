@@ -70,13 +70,49 @@
               :render-row #(r/as-element [speaker-item %])
               :enableEmptySections true}])
 
-(defn export-button []
-  [touchable-highlight {:on-press #(dispatch [:export-data])}
-   [text {:style {:padding 10 :background-color "#FFDD67" :margin-bottom 10} } "Export to Paste.ee"]])
+(def RNFS (js/require "react-native-fs"))
+(def what-platform (keyword (str (.-OS (.-Platform ReactNative)))))
+(def the-relative-file-path "auricle-saved.txt")
+(def the-file-path (str (case what-platform ;;maybe could have used .-DocumentDirectoryPath here
+                           :android (.-ExternalDirectoryPath RNFS)
+                           :ios (.-LibraryDirectoryPath RNFS)) "/" the-relative-file-path))
+(defn rnfs-write-to-file [speakers] (.writeFile RNFS the-file-path (str speakers) "utf8"))
+(def alert-class (.-Alert ReactNative))
+(defn alert-buttons-constructor [input]
+  (loop [input input]
+    (if (or (string? input) (map? input)) (recur [input])
+        (mapv #(loop [input %] (cond (map? input) input
+                                     (string? input) {:text input})) input))))
+(defn alert
+  ([title message buttons]
+   (alert title message buttons {} ))
+  ([title message buttons options]
+   (.alert alert-class (str title) (str message)
+           (clj->js (alert-buttons-constructor buttons))
+           (clj->js options)))
+  )
+(defn alert-about-write-failed [e] (alert "Writing to file failed"
+                                          (str "There was an error writing to file: " e
+                                               "  →the path: " the-file-path)
+                                          "Too bad"))
+(defn write-to-file-fn [what-then-fn]
+  (fn write-to-file [speakers] (-> speakers
+                                   rnfs-write-to-file
+                                   (.then (what-then-fn))
+                                   (.catch #(alert-about-write-failed %)))))
+(def esteban-share (js/require "react-native-share"))
+(defn share-filepath [] (.open esteban-share
+                               (clj->js {:url (str "file://" the-file-path)
+                                         ;;maybe setting :title or :subject (not :message) would prevent crashes
+                                         })))
+(def write-to-file-and-share (write-to-file-fn share-filepath))
+(defn share-button [text-on on-press-func speakers]
+  [touchable-highlight {:on-press #(on-press-func speakers)}
+   [text {:style {:padding 10 :background-color "#999999" :margin-bottom 10}} text-on]])
+(defn export-button [speakers] (share-button "Export" write-to-file-and-share speakers))
 
 (defn new-speaker []
-  (let [speakers (subscribe [:speakers])
-        api-key (subscribe [:api-key])]
+  (let [speakers (subscribe [:speakers])]
     (fn []
       [view {:style {:flex 1 :flex-direction "column" :justify-content "space-between" :align-items "stretch" :margin-left 20 :margin-right 20}}
        [text-input {:onChangeText #(dispatch [:speaker-input-changed %])
@@ -86,16 +122,9 @@
                     :autoCorrect false
                     :style {:flex 1}}]
        [speaker-list @speakers]
-       (if-not @api-key
-         [view {:flex 1 :flex-direction "row"}
-         [text-input {:onChangeText #(dispatch [:api-key-input-changed %])
-                      :onSubmitEditing #(dispatch [:save-api-key])
-                      :placeholder "Paste.ee api key"
-                      :autoCorrect false
-                      :style {:flex 1}}]
-          [touchable-highlight {:on-press #(dispatch [:load-data :api-key])}
-           [text "Load api-key"]]]
-         [export-button])])))
+       [view {:flex 1 :flex-direction "row" :justify-content "center" :align-items "center"}
+        [export-button @speakers]]
+       ])))
 
 (defn pages []
   (let [current-speaker (subscribe [:current-speaker])

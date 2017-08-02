@@ -10,7 +10,6 @@
    [day8.re-frame.http-fx]
    [auricle.async-storage-fx :as async-storage-fx]))
 
-
 ;; -- Interceptors ------------------------------------------------------------
 ;;
 ;; See https://github.com/Day8/re-frame/blob/master/docs/Interceptors.md
@@ -119,53 +118,3 @@
  validate-spec
  (fn [db [_ reason]]
    (assoc db :fail reason)))
-
-(reg-event-fx
- :save-api-key
- validate-spec
- (fn [{:keys [db]} [_]]
-   (let [api-key (:api-key-input db)]
-     {:db (assoc db :api-key api-key)
-      :async-storage-fx/set-item (format-item :api-key api-key)})))
-
-(reg-event-db
- :api-key-input-changed
- validate-spec
- (fn [db [_ new-name]]
-   (assoc db :api-key-input new-name)))
-
-(reg-event-fx
- :export-data
- validate-spec
- (fn
-   [{:keys [db]} [_]]
-   {:db (assoc db :loading true)
-    :http-xhrio {:method :post
-                 :uri "https://api.paste.ee/v1/pastes"
-                 :timeout 10000
-                 :format          (ajax/json-request-format)
-                 :response-format (ajax/json-response-format {:keywords? true})
-                 :params {:key (:api-key db)
-                          :description "Auricle export"
-                          :sections [{:name "Speakers"
-                                      :contents (str (:speakers db))}]}
-                 :on-failure [:export-data-failure]
-                 :on-success [:export-data-success]}}))
-
-
-(reg-event-db
- :export-data-failure
- validate-spec
- (fn [db [_ reason]]
-   (assoc db :export-fail reason
-          :loading false)))
-
-
-(reg-event-db
- :export-data-success
- validate-spec
- (fn [db [_ response]]
-   (assoc db :export-success response
-          :loading false)))
-
-

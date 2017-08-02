@@ -77,12 +77,24 @@
                            :android (.-ExternalDirectoryPath RNFS)
                            :ios (.-LibraryDirectoryPath RNFS)) "/" the-relative-file-path))
 (defn rnfs-write-to-file [speakers] (.writeFile RNFS the-file-path (str speakers) "utf8"))
-(defn alert-about-write-failed [e] (.alert (.-Alert ReactNative)
-                                           "Writing to file failed"
-                                           (str "There was an error writing to file: " e
-                                                "  →the path: " the-file-path)
-                                           (clj->js
-                                            [{:text "Too bad" :onPress #(do)}])))
+(def alert-class (.-Alert ReactNative))
+(defn alert-buttons-constructor [input]
+  (loop [input input]
+    (if (or (string? input) (map? input)) (recur [input])
+        (mapv #(loop [input %] (cond (map? input) input
+                                     (string? input) {:text input})) input))))
+(defn alert
+  ([title message buttons]
+   (alert title message buttons {} ))
+  ([title message buttons options]
+   (.alert alert-class (str title) (str message)
+           (clj->js (alert-buttons-constructor buttons))
+           (clj->js options)))
+  )
+(defn alert-about-write-failed [e] (alert "Writing to file failed"
+                                          (str "There was an error writing to file: " e
+                                               "  →the path: " the-file-path)
+                                          "Too bad"))
 (defn write-to-file-fn [what-then-fn]
   (fn write-to-file [speakers] (-> speakers
                                    rnfs-write-to-file
